@@ -29,6 +29,7 @@ namespace DvorakKeyboard
 			Console.WriteLine("Hello World!");
 
 			input = new Input();
+			keyRecorder = new KeyRecorder(input);
 
 			input.KeyboardFilterMode = KeyboardFilterMode.All;
 
@@ -43,16 +44,22 @@ namespace DvorakKeyboard
 			Console.ReadLine();
 		}
 
-
-		static int mainKeyboard = 3;
+		static int mapToDvorakKeyboardId = 3;
+		private static bool enableKeyRecording = true;
+		private static KeyRecorder keyRecorder;
 
 		private static void Input_OnKeyPressed(object sender, KeyPressedEventArgs e)
 		{
 			// if the key is going down and it is a key we want to map to Dvorák
-			if (e.DeviceId == mainKeyboard
-				&& e.State == KeyState.Down)
+			if (e.DeviceId == mapToDvorakKeyboardId)
 			{
 				e.Key = QwertyToDvorak.MapKey(e.Key);
+			}
+
+			if(enableKeyRecording)
+			{
+				// let the macro recorder at the event
+				keyRecorder.ProcessKey(ref e);
 			}
 		}
 

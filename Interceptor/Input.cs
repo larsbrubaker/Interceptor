@@ -152,8 +152,11 @@ namespace Interceptor
             throw new Exception("Interception.Receive() failed for an unknown reason. The driver has been unloaded.");
         }
 
-        public void SendKey(Keys key, KeyState state)
+        public void SendKey(Keys key, KeyState state, int deviceId = -1)
         {
+            // If it is not passed in, use the stored one
+            deviceId = deviceId == -1 ? this.deviceId : deviceId;
+
             var stroke = new Stroke();
             var keyStroke = new KeyStroke
             {
@@ -166,7 +169,9 @@ namespace Interceptor
             _ = InterceptionDriver.Send(context, deviceId, ref stroke, 1);
 
             if (KeyPressDelay > 0)
+            {
                 Thread.Sleep(KeyPressDelay);
+            }
         }
 
         /// <summary>
@@ -177,7 +182,9 @@ namespace Interceptor
             SendKey(key, KeyState.Down);
 
             if (KeyPressDelay > 0)
+            {
                 Thread.Sleep(KeyPressDelay);
+            }
 
             SendKey(key, KeyState.Up);
         }
