@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -65,9 +62,11 @@ namespace Interceptor
 
             if (context != IntPtr.Zero)
             {
-                callbackThread = new Thread(new ThreadStart(DriverCallback));
-                callbackThread.Priority = ThreadPriority.Highest;
-                callbackThread.IsBackground = true;
+                callbackThread = new Thread(new ThreadStart(DriverCallback))
+                {
+                    Priority = ThreadPriority.Highest,
+                    IsBackground = true
+                };
                 callbackThread.Start();
 
                 IsLoaded = true;
@@ -102,7 +101,7 @@ namespace Interceptor
             InterceptionDriver.SetFilter(context, InterceptionDriver.IsKeyboard, (Int32) KeyboardFilterMode);
             InterceptionDriver.SetFilter(context, InterceptionDriver.IsMouse, (Int32) MouseFilterMode);
 
-            Stroke stroke = new Stroke();
+            var stroke = new Stroke();
 
             while (InterceptionDriver.Receive(context, deviceId = InterceptionDriver.Wait(context), ref stroke, 1) > 0)
             {
@@ -128,7 +127,13 @@ namespace Interceptor
                 {
                     if (OnKeyPressed != null)
                     {
-                        var args = new KeyPressedEventArgs() { Key = stroke.Key.Code, State = stroke.Key.State};
+                        var args = new KeyPressedEventArgs()
+                        {
+                            Key = stroke.Key.Code,
+                            State = stroke.Key.State,
+                            DeviceId = deviceId
+                        };
+
                         OnKeyPressed(this, args);
 
                         if (args.Handled)
@@ -140,7 +145,7 @@ namespace Interceptor
                     }
                 }
 
-                InterceptionDriver.Send(context, deviceId, ref stroke, 1);
+                _ = InterceptionDriver.Send(context, deviceId, ref stroke, 1);
             }
 
             Unload();
@@ -149,15 +154,16 @@ namespace Interceptor
 
         public void SendKey(Keys key, KeyState state)
         {
-            Stroke stroke = new Stroke();
-            KeyStroke keyStroke = new KeyStroke();
-
-            keyStroke.Code = key;
-            keyStroke.State = state;
+            var stroke = new Stroke();
+            var keyStroke = new KeyStroke
+            {
+                Code = key,
+                State = state
+            };
 
             stroke.Key = keyStroke;
 
-            InterceptionDriver.Send(context, deviceId, ref stroke, 1);
+            _ = InterceptionDriver.Send(context, deviceId, ref stroke, 1);
 
             if (KeyPressDelay > 0)
                 Thread.Sleep(KeyPressDelay);
@@ -352,10 +358,11 @@ namespace Interceptor
 
         public void SendMouseEvent(MouseState state)
         {
-            Stroke stroke = new Stroke();
-            MouseStroke mouseStroke = new MouseStroke();
-
-            mouseStroke.State = state;
+            var stroke = new Stroke();
+            var mouseStroke = new MouseStroke
+            {
+                State = state
+            };
 
             if (state == MouseState.ScrollUp)
             {
@@ -368,7 +375,7 @@ namespace Interceptor
 
             stroke.Mouse = mouseStroke;
 
-            InterceptionDriver.Send(context, 12, ref stroke, 1);
+            _ = InterceptionDriver.Send(context, 12, ref stroke, 1);
         }
 
         public void SendLeftClick()
@@ -405,16 +412,17 @@ namespace Interceptor
         {
             if (useDriver)
             {
-                Stroke stroke = new Stroke();
-                MouseStroke mouseStroke = new MouseStroke();
-
-                mouseStroke.X = deltaX;
-                mouseStroke.Y = deltaY;
+                var stroke = new Stroke();
+                var mouseStroke = new MouseStroke
+                {
+                    X = deltaX,
+                    Y = deltaY
+                };
 
                 stroke.Mouse = mouseStroke;
                 stroke.Mouse.Flags = MouseFlags.MoveRelative;
 
-                InterceptionDriver.Send(context, 12, ref stroke, 1);
+                _ = InterceptionDriver.Send(context, 12, ref stroke, 1);
             }
             else
             {
@@ -430,16 +438,17 @@ namespace Interceptor
         {
             if (useDriver)
             {
-                Stroke stroke = new Stroke();
-                MouseStroke mouseStroke = new MouseStroke();
-
-                mouseStroke.X = x;
-                mouseStroke.Y = y;
+                var stroke = new Stroke();
+                var mouseStroke = new MouseStroke
+                {
+                    X = x,
+                    Y = y
+                };
 
                 stroke.Mouse = mouseStroke;
                 stroke.Mouse.Flags = MouseFlags.MoveAbsolute;
 
-                InterceptionDriver.Send(context, 12, ref stroke, 1);
+                _ = InterceptionDriver.Send(context, 12, ref stroke, 1);
             }
             {
                 Cursor.Position = new Point(x, y);

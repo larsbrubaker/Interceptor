@@ -8,6 +8,7 @@ namespace Interceptor
 {
     public class KeyPressedEventArgs : EventArgs
     {
+        public int DeviceId { get; set; }
         public Keys Key { get; set; }
         public KeyState State { get; set; }
         public bool Handled { get; set; }
