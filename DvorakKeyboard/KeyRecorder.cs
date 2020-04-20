@@ -11,6 +11,7 @@ namespace DvorakKeyboard
 		private Dictionary<Keys, bool> keyState = new Dictionary<Keys, bool>();
 		private Input input;
 		private List<(Keys key, KeyState state, int deviceId)> recording = new List<(Keys key, KeyState state, int deviceId)>();
+		private HashSet<Keys> upsToConsume = new HashSet<Keys>();
 
 		public KeyRecorder(Input input)
 		{
@@ -19,7 +20,17 @@ namespace DvorakKeyboard
 
 		public void ProcessKey(ref KeyPressedEventArgs e)
 		{
-			keyState[e.Key] = e.State == KeyState.Down;
+			if(upsToConsume.Count > 0
+				&& e.State.HasFlag(KeyState.Up)
+				&& upsToConsume.Contains(e.Key))
+			{
+				e.Handled = true;
+				upsToConsume.Remove(e.Key);
+				return;
+			}
+
+			keyState[e.Key] = (e.State.HasFlag(KeyState.Down) || e.State.HasFlag(KeyState.E0) || e.State.HasFlag(KeyState.E1))
+				&& !e.State.HasFlag(KeyState.Up);
 
 			if (OnlyDown(new[] { Keys.Control, Keys.R }))
 			{
@@ -27,17 +38,20 @@ namespace DvorakKeyboard
 				{
 					// stop recording
 					Recording = false;
+					Console.WriteLine("Done Recording");
 				}
 				else
 				{
 					// start recording
 					recording.Clear();
 					Recording = true;
+					Console.Write("Recording");
 				}
 
 				// Don't process this key, the r will not be down due to the handled true
 				keyState[Keys.R] = false;
 				e.Handled = true;
+				upsToConsume.Add(Keys.R);
 				// make sure we know the control key is down
 				recording.Add((Keys.Control, KeyState.Down, e.DeviceId));
 				// exit before we get to the recording phase
@@ -46,11 +60,13 @@ namespace DvorakKeyboard
 			else if (OnlyDown(new[] { Keys.Control, Keys.P }))
 			{
 				// play the stored keys back
+				Console.WriteLine("Playing...");
 
 				// Don't process this key, the p will not be down due to the handled true
 				keyState[Keys.P] = false;
 				e.Handled = true;
-				foreach(var tuple in recording)
+				upsToConsume.Add(Keys.P);
+				foreach (var tuple in recording)
 				{
 					input.SendKey(tuple.key, tuple.state, tuple.deviceId);
 				}
@@ -59,9 +75,18 @@ namespace DvorakKeyboard
 				return;
 			}
 
-			if (Recording)
+			if (Recording
+				&& !e.Handled)
 			{
 				recording.Add((e.Key, e.State, e.DeviceId));
+				if (e.Key != Keys.LeftShift
+					&& e.Key != Keys.RightShift
+					&& e.Key != Keys.Control
+					&& e.Key != Keys.RightAlt
+					&& !e.State.HasFlag(KeyState.Up))
+				{
+					Console.Write($".");
+				}
 			}
 		}
 

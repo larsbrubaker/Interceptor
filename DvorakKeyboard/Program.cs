@@ -26,7 +26,15 @@ namespace DvorakKeyboard
 
 		private static void Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
+			Console.WriteLine("Ctrl+R : start/stop recording keystroke");
+			Console.WriteLine("Ctrl+P : play back recorded keystroke");
+			Console.WriteLine("Type 'A' in this window to [A]ctivate Dvorak mapping.");
+
+			if(args.Length > 0 
+				&& args[0] == "A")
+			{
+				enableDvorakMapping = true;
+			}
 
 			input = new Input();
 			keyRecorder = new KeyRecorder(input);
@@ -41,17 +49,35 @@ namespace DvorakKeyboard
 			// make sure we wait around and close up nicely
 			handler = new ConsoleEventDelegate(ConsoleEventCallback);
 			SetConsoleCtrlHandler(handler, true);
-			Console.ReadLine();
+			while (true)
+			{
+				var line = Console.ReadLine();
+				if(line == "a" || line == "A")
+				{
+					enableDvorakMapping = !enableDvorakMapping;
+
+					if(enableDvorakMapping)
+					{
+						Console.WriteLine("Dvorak ON");
+					}
+					else
+					{
+						Console.WriteLine("Dvorak OFF");
+					}
+				}
+			}
 		}
 
 		static int mapToDvorakKeyboardId = 3;
 		private static bool enableKeyRecording = true;
 		private static KeyRecorder keyRecorder;
+		private static bool enableDvorakMapping;
 
 		private static void Input_OnKeyPressed(object sender, KeyPressedEventArgs e)
 		{
 			// if the key is going down and it is a key we want to map to Dvorák
-			if (e.DeviceId == mapToDvorakKeyboardId)
+			if (enableDvorakMapping
+				&& e.DeviceId == mapToDvorakKeyboardId)
 			{
 				e.Key = QwertyToDvorak.MapKey(e.Key);
 			}
