@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29519.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interceptor", "Interceptor\Interceptor.csproj", "{C451A00E-77F1-4F3F-B7EE-27DC712EA316}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemTrayApp", "SystemTrayApp\SystemTrayApp.csproj", "{D60E24F0-FC47-4490-ACD6-3157C26AFF39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DvorakKeyboard", "DvorakKeyboard\DvorakKeyboard.csproj", "{E6D4438B-2E1B-49AD-B3B4-21F609BC7394}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interceptor", "Interceptor\Interceptor.csproj", "{C451A00E-77F1-4F3F-B7EE-27DC712EA316}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,19 +13,19 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D60E24F0-FC47-4490-ACD6-3157C26AFF39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D60E24F0-FC47-4490-ACD6-3157C26AFF39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D60E24F0-FC47-4490-ACD6-3157C26AFF39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D60E24F0-FC47-4490-ACD6-3157C26AFF39}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C451A00E-77F1-4F3F-B7EE-27DC712EA316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C451A00E-77F1-4F3F-B7EE-27DC712EA316}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C451A00E-77F1-4F3F-B7EE-27DC712EA316}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C451A00E-77F1-4F3F-B7EE-27DC712EA316}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E6D4438B-2E1B-49AD-B3B4-21F609BC7394}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E6D4438B-2E1B-49AD-B3B4-21F609BC7394}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E6D4438B-2E1B-49AD-B3B4-21F609BC7394}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E6D4438B-2E1B-49AD-B3B4-21F609BC7394}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {80FEE5CA-D8A9-4610-AB34-9CB36EAFD6FD}
+		SolutionGuid = {7B6AA4EE-89A8-4DC8-AAC9-EDEE014AF0A8}
 	EndGlobalSection
 EndGlobal
