@@ -1,7 +1,9 @@
 ﻿using Interceptor;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 
 namespace DvorakKeyboard
 {
@@ -38,14 +40,14 @@ namespace DvorakKeyboard
 				{
 					// stop recording
 					Recording = false;
-					Console.WriteLine("Done Recording");
+					Debug.WriteLine(" Done Recording");
 				}
 				else
 				{
 					// start recording
 					recording.Clear();
 					Recording = true;
-					Console.Write("Recording");
+					Debug.Write("Recording ");
 				}
 
 				// Don't process this key, the r will not be down due to the handled true
@@ -57,10 +59,11 @@ namespace DvorakKeyboard
 				// exit before we get to the recording phase
 				return;
 			}
-			else if (OnlyDown(new[] { Keys.Control, Keys.P }))
+			else if (!Recording
+				&& OnlyDown(new[] { Keys.Control, Keys.P }))
 			{
 				// play the stored keys back
-				Console.WriteLine("Playing...");
+				Debug.Write($"Playing ({recording.Count()}): ");
 
 				// Don't process this key, the p will not be down due to the handled true
 				keyState[Keys.P] = false;
@@ -68,8 +71,17 @@ namespace DvorakKeyboard
 				upsToConsume.Add(Keys.P);
 				foreach (var tuple in recording)
 				{
-					input.SendKey(tuple.key, tuple.state, tuple.deviceId);
+					if (tuple.key == Keys.Tilde)
+					{
+						Thread.Sleep(500);
+					}
+					else
+					{
+						input.SendKey(tuple.key, tuple.state, tuple.deviceId);
+					}
 				}
+
+				Debug.WriteLine("Done");
 
 				// exit before we get to the recording phase
 				return;
@@ -78,6 +90,18 @@ namespace DvorakKeyboard
 			if (Recording
 				&& !e.Handled)
 			{
+				// add a pause to the output
+				if(e.Key == Keys.Tilde)
+				{
+					Debug.Write("P");
+					e.Handled = true;
+					// only add the down as we are going to convert it to a wait
+					upsToConsume.Add(Keys.Tilde);
+					keyState[Keys.Tilde] = false;
+					recording.Add((e.Key, e.State, e.DeviceId));
+					return;
+				}
+
 				recording.Add((e.Key, e.State, e.DeviceId));
 				if (e.Key != Keys.LeftShift
 					&& e.Key != Keys.RightShift
@@ -85,7 +109,7 @@ namespace DvorakKeyboard
 					&& e.Key != Keys.RightAlt
 					&& !e.State.HasFlag(KeyState.Up))
 				{
-					Console.Write($".");
+					Debug.Write(".");
 				}
 			}
 		}
