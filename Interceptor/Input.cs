@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using DvorakKeyboard;
 
 namespace Interceptor
 {
@@ -123,7 +124,11 @@ namespace Interceptor
                     }
                 }
 
-                if (InterceptionDriver.IsKeyboard(deviceId) > 0)
+                // trying to make sure we don't re-map the / key on the keypad
+                var keyIsUnmodified = QwertyToDvorak.MapKey(stroke.Key.Code) == stroke.Key.Code;
+                var isNormalKeyPress = stroke.Key.State == KeyState.Down || stroke.Key.State == KeyState.Up;
+                if (InterceptionDriver.IsKeyboard(deviceId) > 0
+                    && (isNormalKeyPress || keyIsUnmodified))
                 {
                     if (OnKeyPressed != null)
                     {

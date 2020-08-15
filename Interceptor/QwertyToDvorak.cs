@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DvorakKeyboard
 {
-	public class QwertyToDvorak
+	public static class QwertyToDvorak
 	{
 		private readonly static Dictionary<Keys, Keys> mapping = new Dictionary<Keys, Keys>()
 		{

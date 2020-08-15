@@ -89,7 +89,7 @@ namespace SystemTrayApp
         private ToolStripMenuItem _stopDeviceMenuItem;
         private ToolStripMenuItem _exitMenuItem;
         private bool enableDvorakMapping = true;
-        private int mapToDvorakKeyboardId =3;
+        private int mapToDvorakKeyboardId = 1;
         private bool enableKeyRecording = true;
 
         private void DisplayStatusMessage(string text)

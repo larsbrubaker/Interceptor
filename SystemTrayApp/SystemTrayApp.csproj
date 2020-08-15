@@ -64,7 +64,6 @@
     <Compile Include="KeyRecorder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QwertyToDvorak.cs" />
     <Compile Include="STAApplicationContext.cs" />
     <Compile Include="ViewManager.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
